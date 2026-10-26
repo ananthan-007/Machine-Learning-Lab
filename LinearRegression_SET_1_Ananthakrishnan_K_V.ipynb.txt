@@ -1,0 +1,149 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "id": "e80bde32-0bc3-4268-9ceb-cf6ee899fed3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "from sklearn.datasets import fetch_california_housing\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.metrics import mean_squared_error,r2_score,root_mean_squared_error"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "id": "60c1bb13-1f3a-4949-b66d-b3f2164e18ad",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "housing = fetch_california_housing()\n",
+    "\n",
+    "data = pd.DataFrame(housing.data, columns=housing.feature_names)\n",
+    "data[\"Price\"] = housing.target\n",
+    "\n",
+    "x_M1 = data[['MedInc']].values\n",
+    "x_M2 = data[['MedInc' , 'AveRooms' , 'HouseAge']]\n",
+    "y = data['Price'].values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "id": "0604a11b-ea8e-4c4a-a2b6-fb4450a19e12",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train_m1,x_test_m1,y_train,y_test = train_test_split(x_M1,y,test_size=0.20,random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "id": "8dd0aa02-ed23-43c3-89aa-d48b08d7046a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train_m2,x_test_m2,y_train,y_test = train_test_split(x_M2,y,test_size=0.20,random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "id": "f47ee0f7-cc1f-4906-963c-8d7ab57eb0e5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "linear_model_1 = LinearRegression()\n",
+    "\n",
+    "linear_model_1.fit(x_train_m1,y_train)\n",
+    "y_pred_M1 = linear_model_1.predict(x_test_m1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "id": "3a7b0312-8057-4c4a-a2a6-0e4f427c8c93",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "linear_model_2 = LinearRegression()\n",
+    "\n",
+    "linear_model_2.fit(x_train_m2,y_train)\n",
+    "y_pred_M2 = linear_model_2.predict(x_test_m2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "id": "0c4c79c8-06dd-4bcf-afc2-a95477eed039",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "MSE of Model 1:  0.7091157771765548\n",
+      "\n",
+      "MSE of Model 2:  0.6589108649336335\n",
+      "\n",
+      "RMSE of Model 1:  0.8420901241414454\n",
+      "\n",
+      "RMSE of Model 2:  0.8117332473994358\n",
+      "\n",
+      "R2 Score of Model 1:  0.45885918903846656\n",
+      "\n",
+      "R2 Score of Model 2:  0.49717158850807086\n"
+     ]
+    }
+   ],
+   "source": [
+    "mse_M1 = mean_squared_error(y_test,y_pred_M1)\n",
+    "mse_M2 = mean_squared_error(y_test,y_pred_M2)\n",
+    "\n",
+    "rmse_M1 = root_mean_squared_error(y_test,y_pred_M1)\n",
+    "rmse_M2 = root_mean_squared_error(y_test,y_pred_M2)\n",
+    "\n",
+    "r2_M1 = r2_score(y_test,y_pred_M1)\n",
+    "r2_M2 = r2_score(y_test,y_pred_M2)\n",
+    "\n",
+    "print(\"\\nMSE of Model 1: \",mse_M1)\n",
+    "print(\"\\nMSE of Model 2: \",mse_M2)\n",
+    "print(\"\\nRMSE of Model 1: \",rmse_M1)\n",
+    "print(\"\\nRMSE of Model 2: \",rmse_M2)\n",
+    "print(\"\\nR2 Score of Model 1: \",r2_M1)\n",
+    "print(\"\\nR2 Score of Model 2: \",r2_M2)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
